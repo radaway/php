@@ -183,6 +183,10 @@ Class novasql{
 
 		if (is_array($condicoes)){
 			$sql = $sql . "WHERE {$this->cnds} ";
+		}else{
+			if (isset($condicoes)){
+				$sql = $sql . "WHERE $condicoes ";
+			}
 		}
 		if (is_array($ordem)){
 			$sql = $sql . "ORDER BY {$this->ordm} ";
@@ -259,6 +263,17 @@ Class novasql{
 	//conta registros
 	function countReg($campo){
 		$sql = "SELECT count({$campo}) FROM {$this->schema}.{$this->tabela}";
+		if($this->result = pg_query($this->conex, $sql)){
+			$this->sqlretorno = pg_fetch_assoc($this->result);
+		}
+	}
+	
+	function countRegWhere($campo,$where = ''){
+		if(!empty($where)){
+			$sql = "SELECT count({$campo}) FROM {$this->schema}.{$this->tabela} WHERE {$where}";
+		}else{
+			$sql = "SELECT count({$campo}) FROM {$this->schema}.{$this->tabela}";
+		}
 		if($this->result = pg_query($this->conex, $sql)){
 			$this->sqlretorno = pg_fetch_assoc($this->result);
 		}
